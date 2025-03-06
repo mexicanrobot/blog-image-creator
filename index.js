@@ -20,10 +20,27 @@ app.post(
     try {
     const image = req.files.image[0].buffer;
     const filename = req.files.image[0].originalname.split(".")[0];
-    const convertedImage = await sharp(image).toFormat("jpg").toBuffer();
+    // const convertedImage = await sharp(image).toFormat("jpg").toBuffer();
+
+    const svgText = `
+      <svg width="1000" height="1000">
+        <style>
+          .title {
+            fill: red;
+            font-size: 48px;
+          }
+        </style>
+        <text x="45%" y="40%" text-anchor="middle" class="title">Hello world</text>
+      </svg>
+    `;
+
+    const svgBuffer = Buffer.from(svgText);
+
+    const imageWithText = await sharp(image).composite([{input: svgBuffer, left: 150, top: 90}]).toBuffer();
+
     res.set('Content-Type', 'image/jpeg');
     res.set('Content-Disposition', `attachment; filename=${filename}.jpg`);
-    res.send(convertedImage);
+    res.send(imageWithText);
     } catch(error) {
       res.sendStatus(500);
     }
