@@ -7,6 +7,8 @@ const app = express();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+const PORT = process.env.PORT || 8888;
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/index.html"));
 });
@@ -28,5 +30,5 @@ app.post(
   }
 );
 
-app.listen(8080);
-console.log(`Express running in http://localhost:8080`);
+app.listen(PORT);
+console.log(`Express running in http://localhost:${PORT}`);
